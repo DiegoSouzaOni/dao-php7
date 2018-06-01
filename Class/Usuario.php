@@ -79,6 +79,10 @@ class Usuario
 		$this->datCadastro = $value;
 	}
 
+	/**
+	 * loadById
+	 * Busca usuário por ID
+	 */
 	public function loadById($id)
 	{
 		$sql = new SQL();
@@ -95,6 +99,55 @@ class Usuario
 
 	}
 
+	/**
+	 * getList
+	 * Busca usuário e retorna uma lista ordenada
+	 */
+	public static function getList()
+	{
+
+		$sql = new SQL();
+		return $sql->select("SELECT * FROM Usuarios ORDER BY idUsuario DESC");
+
+	}
+
+	/**
+	 * search
+	 * Busca usuário pela string passada
+	 */
+	public static function search($login)
+	{
+		$sql = new SQL();
+		return $sql->select("SELECT * FROM Usuarios WHERE desLogin LIKE :desLogin ORDER BY idUsuario DESC", [":desLogin"=>"%".$login."%"]);
+	}
+
+	/**
+	 * login
+	 * Verifica se o usuario existe, caso exista seta os dados, caso não retorna erro
+	 */
+	public function login($login, $senha)
+	{
+		$sql = new SQL();
+		$result = $sql->select("SELECT * FROM Usuarios WHERE desLogin = :desLogin AND desSenha = :desSenha", [":desLogin"=>$login, ":desSenha"=>$senha]);
+
+		if(count($result) > 0) {
+			$row = $result[0];
+
+			$this->setIdUsuario($row['idUsuario']);
+			$this->setDesLogin($row['desLogin']);
+			$this->setDesSenha($row['desSenha']);
+			$this->setDatCadastro(new DateTime($row['datCadastro']));
+		}
+		else {
+			throw new Exception("Usuário não encontrado!", 1);
+			
+		}
+	}
+
+	/**
+	 * __toString
+	 * Metodo mágico para retornar os dados em json
+	 */
 	public function __toString()
 	{
 		return json_encode([
