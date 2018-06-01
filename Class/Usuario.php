@@ -91,10 +91,7 @@ class Usuario
 		if(count($result) > 0) {
 			$row = $result[0];
 
-			$this->setIdUsuario($row['idUsuario']);
-			$this->setDesLogin($row['desLogin']);
-			$this->setDesSenha($row['desSenha']);
-			$this->setDatCadastro(new DateTime($row['datCadastro']));
+			$this->setData($result[0]);
 		}
 
 	}
@@ -132,16 +129,68 @@ class Usuario
 
 		if(count($result) > 0) {
 			$row = $result[0];
-
-			$this->setIdUsuario($row['idUsuario']);
-			$this->setDesLogin($row['desLogin']);
-			$this->setDesSenha($row['desSenha']);
-			$this->setDatCadastro(new DateTime($row['datCadastro']));
+			
+			$this->setData($result[0]);
 		}
 		else {
 			throw new Exception("Usuário não encontrado!", 1);
 			
 		}
+	}
+
+	/**
+	 * insert
+	 * Cria novo usuário no banco de dados.
+	 */
+	public function insert()
+	{
+		$sql = new Sql();
+		$result = $sql->select("CALL sp_usuarios_insert(:desLogin,:desSenha)",[":desLogin" => $this->getDesLogin(), ":desSenha" => $this->getDesSenha()]);
+
+		if(count($result) > 0){
+			$this->setData($result[0]);
+		}
+	}
+
+	/**
+	 * insert
+	 * Cria novo usuário no banco de dados.
+	 */
+	public function update($login, $senha)
+	{
+		$this->setDesLogin($login);
+		$this->setDesSenha($senha);
+
+		$sql = new Sql();
+		$sql->query("UPDATE Usuarios SET desLogin = :desLogin, desSenha = :desSenha WHERE idUsuario = :idUsuario",
+			[
+				":desLogin" => $this->getDesLogin(), 
+				":desSenha" => $this->getDesSenha(),
+				":idUsuario" => $this->getIdUsuario()
+			]
+		);
+	}
+
+	/**
+	 * setData
+	 * Seta dados do retorno.
+	 */
+	public function setData($data)
+	{
+		$this->setIdUsuario($data['idUsuario']);
+		$this->setDesLogin($data['desLogin']);
+		$this->setDesSenha($data['desSenha']);
+		$this->setDatCadastro(new DateTime($data['datCadastro']));
+	}
+
+	/**
+	 * __construct
+	 * Metodo mágico para retornar os dados em json
+	 */
+	public function __construct($login = "", $senha = "")
+	{
+		$this->setDesLogin($login);
+		$this->setDesSenha($senha);
 	}
 
 	/**
