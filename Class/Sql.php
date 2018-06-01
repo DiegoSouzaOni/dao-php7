@@ -20,39 +20,39 @@ class Sql extends PDO
 
 	/**
 	 * setParams
-	 * Seta os parametros, espera um statment e os parametros(Array)
+	 * Seta os parametros, espera um statement e os parametros(Array)
 	 */
-	private function setParams($statment, $parameters = [])
+	private function setParams($statement, $parameters = [])
 	{
 		foreach ($parameters as $key => $value)
 		{
-			$this->setParam($key,$value);
+			$this->setParam($statement,$key,$value);
 		}
 	}
 
 	/**
 	 * setParam
-	 * Seta um unico parametro, espera um statment, key(chave) e value(valor)
+	 * Seta um unico parametro, espera um statement, key(chave) e value(valor)
 	 */
-	private function setParam($statment, $key, $value)
+	private function setParam($statement, $key, $value)
 	{
-		$statment->bindParam($key,$value);
+		$statement->bindParam($key,$value);
 	}
 
 	/**
 	 * query
-	 * Abre conexão com banco de dados, prepara os parametros e executa o statment.
+	 * Abre conexão com banco de dados, prepara os parametros e executa o statement.
 	 */	
 	public function query($rawQuery, $params = [])
 	{
 
-		$statment = $this->connection->prepare($rawQuery);
+		$statement = $this->connection->prepare($rawQuery);
 
-		$this->setParams($statment, $params);
+		$this->setParams($statement, $params);
 
-		$statment->execute();
+		$statement->execute();
 
-		return $statment;
+		return $statement;
 
 	}
 
@@ -64,9 +64,9 @@ class Sql extends PDO
 	public function select($rawQuery, $params = []):array
 	{
 
-		$statment = $this->query($rawQuery, $params);
+		$statement = $this->query($rawQuery, $params);
 
-		return $statment->fetchAll(PDO::FETCH_ASSOC);
+		return $statement->fetchAll(PDO::FETCH_ASSOC);
 
 	}
 
