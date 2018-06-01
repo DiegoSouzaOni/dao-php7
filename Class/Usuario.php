@@ -145,7 +145,12 @@ class Usuario
 	public function insert()
 	{
 		$sql = new Sql();
-		$result = $sql->select("CALL sp_usuarios_insert(:desLogin,:desSenha)",[":desLogin" => $this->getDesLogin(), ":desSenha" => $this->getDesSenha()]);
+		$result = $sql->select("CALL sp_usuarios_insert(:desLogin,:desSenha)",
+			[
+				":desLogin" => $this->getDesLogin(), 
+				":desSenha" => $this->getDesSenha()
+			]
+		);
 
 		if(count($result) > 0){
 			$this->setData($result[0]);
@@ -169,6 +174,25 @@ class Usuario
 				":idUsuario" => $this->getIdUsuario()
 			]
 		);
+	}
+
+	/**
+	 * delete
+	 * Cria novo usuário no banco de dados.
+	 */
+	public function deleteById()
+	{
+		$sql = new Sql();
+		$sql->query("DELETE FROM Usuarios WHERE idUsuario = :idUsuario",
+			[
+				":idUsuario" => $this->getIdUsuario()
+			]
+		);
+
+		$this->setIdUsuario(0);
+		$this->setDesLogin("");
+		$this->setDesSenha("");
+		$this->setDatCadastro(new DateTime());
 	}
 
 	/**

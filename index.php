@@ -28,10 +28,15 @@ require_once("config.php");
 //echo $Usuario;
 
 //Faz update em um usuário ja existente
-$Usuario = new Usuario();
-$Usuario->loadById(2);
-$Usuario->update("teste 02", "teste123");
+//$Usuario = new Usuario();
+//$Usuario->loadById(2);
+//$Usuario->update("teste 02", "teste123");
+//echo $Usuario;
 
-echo $Usuario;
+//Deleta em um usuário ja existente
+//$Usuario = new Usuario();
+//$Usuario->loadById(4);
+//$Usuario->deleteById();
+//echo $Usuario;
 
 ?>
